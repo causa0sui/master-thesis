@@ -76,7 +76,7 @@ df = spark.read.format('csv') \
   .option("sep", ',') \
   .load(r'C:\Users\pm83635\Desktop\praca magisterska\home-credit-default-risk\home-credit-default-risk\df.csv')
 
-df.select('SK_ID_CURR', 'TARGET').head(10)
+df.toPandas.sample(10)
 
 df.groupBy("TARGET").agg({'AMT_CREDIT':'mean'}).show()
 
@@ -165,8 +165,32 @@ sns.heatmap(df_corr.corr(),
             vmin=-1,
             cmap='coolwarm',
             annot=True);   
+      
+# 2.2 Missing values plot
 
-# 2.2 Missing values imputation      
+app_null = application.drop(["TARGET"], axis=1).isnull().sum().sort_values(ascending = False)
+
+percent = round(application.drop(["TARGET"], axis=1).isnull().sum()/len(application.drop(["TARGET"], axis=1))*100, ndigits=3)
+
+missing_app = pd.concat([app_null, percent], axis = 1, keys = ["Count of missing values", "Percentage of missing values"], sort = False)
+
+missing_app.head(10)
+
+#missing_app["Percentage of missing values"].drop_duplicates()
+plt.rcParams['font.sans-serif'] = 'Arial'
+plt.rcParams['font.size'] = 15
+fig, ax = plt.subplots(figsize = (9, 5))
+plt.plot(missing_app["Percentage of missing values"].drop_duplicates(), linewidth = 4)
+plt.grid()
+ax.xaxis.grid(color = 'grey', linestyle ='-')
+plt.xticks(rotation = 90)
+#plt.title('Percentage of missing values for variables')
+plt.ylabel('Percents')
+plt.show()
+#missing_app.head(10)
+
+
+# 2.3 Missing values imputation      
 
 df_pandas = df.toPandas()
 len(df_pandas.columns)
@@ -207,29 +231,6 @@ df_obj_imputed
 df_final = pd.concat([df_num_imputed, df_obj_imputed], axis = 1)
 
 df_final.head(100)
-
-# 2.3 Missing values plot
-
-app_null = application.drop(["TARGET"], axis=1).isnull().sum().sort_values(ascending = False)
-
-percent = round(application.drop(["TARGET"], axis=1).isnull().sum()/len(application.drop(["TARGET"], axis=1))*100, ndigits=3)
-
-missing_app = pd.concat([app_null, percent], axis = 1, keys = ["Count of missing values", "Percentage of missing values"], sort = False)
-
-missing_app.head(10)
-
-#missing_app["Percentage of missing values"].drop_duplicates()
-plt.rcParams['font.sans-serif'] = 'Arial'
-plt.rcParams['font.size'] = 15
-fig, ax = plt.subplots(figsize = (9, 5))
-plt.plot(missing_app["Percentage of missing values"].drop_duplicates(), linewidth = 4)
-plt.grid()
-ax.xaxis.grid(color = 'grey', linestyle ='-')
-plt.xticks(rotation = 90)
-#plt.title('Percentage of missing values for variables')
-plt.ylabel('Percents')
-plt.show()
-#missing_app.head(10)
 
 # 2.4 Balanced data or not - Pie Chart
 
@@ -435,7 +436,7 @@ axes[0].yaxis.grid(color = 'grey', linestyle ='-')
 plt.tight_layout()
 plt.legend(loc='best', title = 'Default')
 
-# 2.8 Family status pie chart and bar chart with split over default/not
+# 2.9 Family status pie chart and bar chart with split over default/not
 
 #pie chart
 status = application['NAME_FAMILY_STATUS'].value_counts()
@@ -490,7 +491,7 @@ axes[0].yaxis.grid(color = 'grey', linestyle ='-')
 plt.tight_layout()
 plt.legend(loc='best', title = 'Default')
 
-# 2.9 Type of income pie chart and bar chart with split over default/not
+# 2.10 Type of income pie chart and bar chart with split over default/not
 
 #pie chart
 status = application['NAME_INCOME_TYPE'].value_counts()
@@ -545,7 +546,7 @@ axes[0].yaxis.grid(color = 'grey', linestyle ='-')
 plt.tight_layout()
 plt.legend(loc='best', title = 'Default')
 
-## 2.10 Types of education pie chart and bar chart with split over default/not
+## 2.11 Types of education pie chart and bar chart with split over default/not
 
 #pie chart
 
@@ -601,7 +602,7 @@ axes[0].yaxis.grid(color = 'grey', linestyle ='-')
 plt.tight_layout()
 plt.legend(loc='best', title = 'Default')
 
-## 2.10 Credit rating region types pie chart and bar chart with split over default/not
+## 2.12 Credit rating region types pie chart and bar chart with split over default/not
 
 #pie chart
 
@@ -657,7 +658,7 @@ axes[0].yaxis.grid(color = 'grey', linestyle ='-')
 plt.tight_layout()
 plt.legend(loc='best', title = 'Default')
 
-# 2.11 Years of work distribution plot
+# 2.13 Years of work distribution plot
 fig, ax = plt.subplots(figsize = (10,6))
 #plt.hist(application['DAYS_EMPLOYED'])
 
@@ -680,7 +681,7 @@ ax.yaxis.set_major_formatter(mpl.ticker.StrMethodFormatter('{x:,.0f}'))
 plt.show()
 
 
-# 2.12 Log income distribution
+# 2.14 Log income distribution
 
 log = np.log(application['AMT_INCOME_TOTAL'])
 
