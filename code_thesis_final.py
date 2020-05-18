@@ -17,11 +17,7 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 plt.style.use('classic')
 %matplotlib inline
-import os
 import seaborn as sns
-import os
-import warnings
-import sys
 
 import xgboost as xgb
 
@@ -30,29 +26,29 @@ import numpy as np
 from itertools import cycle
 import matplotlib.pyplot as plt
 import seaborn as sns
-from pyspark.sql import SparkSession, SQLContext
-from pyspark import SparkContext
-from pyspark.sql.functions import *
 from fancyimpute import IterativeImputer as MICE
 
 import pandas as pd
 import numpy as np
+
 from pyspark.sql.functions import *
 from sklearn.metrics import f1_score, recall_score, precision_score
 from sklearn.metrics import roc_curve, auc
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.model_selection import train_test_split
-from pyspark.sql import SparkSession
+
+from pyspark.sql import SparkSession, SQLContext
+from pyspark import SparkContext
+from pyspark.sql.functions import *
 from pyspark.sql.types import IntegerType, DoubleType, DateType, FloatType
 from pyspark.ml.evaluation import BinaryClassificationEvaluator
 from pyspark.ml.tuning import ParamGridBuilder, CrossValidator
-from pyspark.ml.classification import LogisticRegression, DecisionTreeClassifier, GBTClassifier, LinearSVC
+from pyspark.ml.classification import LogisticRegression, DecisionTreeClassifier
 from pyspark.ml.feature import VectorAssembler
 from pyspark.ml import Pipeline
 from pyspark.ml.feature import StringIndexer, VectorAssembler
 from pyspark.ml.classification import RandomForestClassifier
-from pyspark.mllib.evaluation import BinaryClassificationMetrics as metric
 
 from distutils.version import LooseVersion
 
